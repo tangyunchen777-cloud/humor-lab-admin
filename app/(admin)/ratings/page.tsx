@@ -1,0 +1,4 @@
+import {getSnapshot} from "@/lib/admin";
+import {PageTitle,Stat} from "@/components/common";
+import {RatingsTable} from "@/components/ratings-table";
+export default async function RatingsPage(){const data=await getSnapshot();const s=data.stats;const approval=s.votes?Math.round(s.upvotes/s.votes*100):0;return <><PageTitle eyebrow="Listen to the crowd" title="Every reaction tells a story." description="Inspect individual votes and see what’s resonating. Ratings are read-only, so the community’s voice stays theirs."/><div className="mb-6 grid gap-4 sm:grid-cols-3"><Stat label="Upvotes" value={s.upvotes} note="On published captions" icon="ratings"/><Stat label="Downvotes" value={s.downvotes} note="On published captions" icon="ratings" color="peach"/><Stat label="Approval rate" value={s.votes?`${approval}%`:"—"} note="Upvotes as a share of all active reactions" icon="activity" color="purple"/></div><RatingsTable votes={data.votes}/></>;}

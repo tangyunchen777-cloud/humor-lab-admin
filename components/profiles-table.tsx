@@ -1,0 +1,14 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import type { Profile } from "@/lib/types";
+import {dateLabel,fullName} from "./common";
+export function ProfilesTable({profiles}:{profiles:Profile[]}){
+  const [search,setSearch]=useState("");const [role,setRole]=useState("all");
+  const rows=profiles.filter(p=>(role==="all"||p.is_superadmin)&&`${fullName(p.first_name,p.last_name)} ${p.email} ${p.id}`.toLowerCase().includes(search.toLowerCase()));
+  return <section className="panel overflow-hidden"><div className="flex flex-wrap justify-between gap-4 border-b border-[#e8ebe1] p-5"><label><span className="sr-only">Search profiles</span><input className="field min-w-64 text-xs" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search names, emails, or user IDs…"/></label><label><span className="sr-only">Profile role</span><select value={role} onChange={e=>setRole(e.target.value)} className="field text-xs"><option value="all">All members</option><option value="admin">Superadmins</option></select></label></div>
+    <div className="overflow-x-auto"><table className="data-table"><thead><tr><th>Member</th><th>Access</th><th>Contributions</th><th>Joined</th><th>Last sign-in</th></tr></thead><tbody>{rows.map(p=><tr key={p.id}><td><div className="flex items-center gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e8eddd] text-xs font-semibold text-[#7c906c]">{p.first_name?.[0]||"?"}{p.last_name?.[0]}</span><div><p className="text-xs font-semibold">{fullName(p.first_name,p.last_name)}</p><p className="mt-1 text-[10px] text-[#97a08d]">{p.email}</p><details className="mt-1 text-[9px] text-[#9aa78b]"><summary className="cursor-pointer">User ID</summary><code className="mt-1 block">{p.id}</code></details></div></div></td><td><span className={`pill ${p.is_superadmin?"bg-[#e8efdb] text-[#6b8550]":"bg-[#eff0ed] text-[#929a8a]"}`}>{p.is_superadmin?"Superadmin":"Member"}</span>{(!p.first_name?.trim()||!p.last_name?.trim())&&<p className="mt-2 text-[9px] text-[#be9169]">Profile incomplete</p>}</td><td><Link className="text-xs text-[#6a8558] hover:underline" href={`/media?creator=${p.id}`}>{p.media_count} captions ↗</Link><p className="mt-2 text-[10px] text-[#a0a68e]">{p.vote_count} votes</p></td><td className="whitespace-nowrap text-[11px] text-[#98a18b]">{dateLabel(p.created_at)}</td><td className="whitespace-nowrap text-[11px] text-[#98a18b]">{dateLabel(p.last_sign_in_at)}</td></tr>)}</tbody></table></div>
+    {!rows.length&&<p className="p-12 text-center text-sm text-stone-500">No matching members.</p>}
+    <p className="border-t border-[#e8ebe1] p-5 text-[10px] text-[#9da58e]">{rows.length} profiles shown · Directory is read-only. Admin access is assigned through the database owner.</p>
+  </section>;
+}

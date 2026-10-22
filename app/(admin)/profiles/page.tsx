@@ -1,0 +1,4 @@
+import {getSnapshot} from "@/lib/admin";
+import {PageTitle,Stat} from "@/components/common";
+import {ProfilesTable} from "@/components/profiles-table";
+export default async function ProfilesPage(){const data=await getSnapshot();return <><PageTitle eyebrow="The people behind the punchlines" title="Meet your community." description="Find a member, review their contributions, and understand who’s making Humor Lab their own."/><div className="mb-6 grid gap-4 sm:grid-cols-3"><Stat label="Registered members" value={data.stats.profiles} note="Profiles in the community" icon="users"/><Stat label="Contributing creators" value={data.profiles.filter(p=>p.media_count>0).length} note="Members with a published caption" icon="media" color="peach"/><Stat label="Active voters" value={data.stats.active_voters} note="Voted or changed a vote in the past 7 days" icon="ratings" color="purple"/></div><ProfilesTable profiles={data.profiles}/></>;}

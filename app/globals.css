@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@theme inline { --font-sans: var(--font-geist-sans); --font-mono: var(--font-geist-mono); }
+:root { --ink: #142f2b; --paper: #f6f5f0; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-geist-sans), Arial, sans-serif; }
+button, select { cursor: pointer; } button:disabled { cursor: wait; opacity: .6; }
+input,textarea,select { font: inherit; } textarea { resize: vertical; }
+::selection { background: #c9e9b0; }
+:focus-visible { outline: 3px solid #dc745f; outline-offset: 4px; }
+.panel { border: 1px solid #e4e5dd; border-radius: 20px; background: white; }
+.eyebrow { color: #72827a; font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 10px; padding: 11px 17px; font-size: 13px; font-weight: 600; transition: .15s; }
+.btn-primary { background: #173e34; color: white; } .btn-primary:hover { background: #225242; }
+.btn-secondary { border: 1px solid #dedfd6; background: white; } .btn-secondary:hover { background: #f5f5ed; }
+.field { display: block; width: 100%; border: 1px solid #d7dcd2; border-radius: 10px; background: white; padding: 11px 13px; color: #142f2b; font-size: 14px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th { padding: 15px 20px; color: #7a877f; background: #fafbf7; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; border-bottom: 1px solid #e7e9e1; }
+.data-table td { padding: 18px 20px; border-bottom: 1px solid #eef0e8; vertical-align: middle; }
+.data-table tbody tr:hover { background: #fafbf7; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.pill { display: inline-block; border-radius: 999px; padding: 4px 9px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
