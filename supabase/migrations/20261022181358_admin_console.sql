@@ -44,6 +44,19 @@ drop policy if exists "Anyone can read generations" on public.generations;
 create policy "Anyone can read generations" on public.generations for select to anon, authenticated
   using (deleted_at is null);
 
+-- Direct Data API writes must obey the same availability rule as the voting RPC.
+drop policy if exists "Members cast own votes" on public.votes;
+create policy "Members cast own votes" on public.votes for insert to authenticated
+  with check ((select auth.uid())=user_id and exists (
+    select 1 from public.generations g where g.id=generation_id and g.deleted_at is null
+  ));
+drop policy if exists "Members change own votes" on public.votes;
+create policy "Members change own votes" on public.votes for update to authenticated
+  using ((select auth.uid())=user_id)
+  with check ((select auth.uid())=user_id and exists (
+    select 1 from public.generations g where g.id=generation_id and g.deleted_at is null
+  ));
+
 create or replace function public.generation_vote_summary()
 returns table (generation_id uuid, upvotes bigint, downvotes bigint, score bigint, my_vote smallint)
 language sql stable security definer set search_path = '' as $$

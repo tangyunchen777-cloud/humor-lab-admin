@@ -43,6 +43,11 @@ do $$ declare media uuid; version timestamptz; snap jsonb; begin
   end;
   perform public.admin_delete_media(media,false);
   if exists(select 1 from public.generations where id=media) then raise exception 'Deleted media is visible through public table policies'; end if;
+  begin
+    insert into public.votes(generation_id,user_id,value) values(media,(select auth.uid()),1);
+    raise exception 'Direct Data API vote accepted deleted media';
+  exception when insufficient_privilege then null;
+  end;
   perform public.admin_delete_media(media,true);
   if not exists(select 1 from public.generations where id=media) then raise exception 'Restored media is missing'; end if;
 end $$;
