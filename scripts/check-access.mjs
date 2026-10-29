@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 const base=process.argv[2]||"http://localhost:3010";
-for(const path of ["/","/media","/media/new","/media/11111111-1111-4111-8111-111111111111/edit","/profiles","/ratings","/activity"]){
+for(const path of ["/","/media","/media/new","/media/11111111-1111-4111-8111-111111111111/edit","/profiles","/ratings","/activity","/pipeline","/requests","/responses",...['terms','examples','models','providers','signup-domains','whitelist','images'].map(r=>`/manage/${r}`)]){
   const response=await fetch(new URL(path,base),{redirect:"manual"});
   assert.equal(response.status,307,`${path} must require login`);
   assert.equal(new URL(response.headers.get("location"),base).pathname,"/login");

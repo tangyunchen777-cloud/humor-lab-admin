@@ -1,6 +1,24 @@
 # Humor Lab · Control Room
 
-Assignment 6: a separate Next.js admin app for the existing Humor Lab Supabase database. It preserves the public rating app and its Week 5 improvements while giving approved administrators analytics, profile browsing, AI media management, and read-only individual ratings.
+Assignments 6–7: a separate Next.js admin app for the existing Humor Lab Supabase database. It preserves the public rating app and its Week 5 improvements while giving approved administrators analytics, content management, model configuration, and generation observability.
+
+## Week 7
+
+- `/profiles`: existing profile directory, protected by Google login and the current superadmin flag.
+- `/pipeline`: read 6 prompt chains and 12 ordered steps; read/update their relative selection weights within each humor style. A style always retains a positive-weight chain. Steps compile into one model call.
+- `/manage/terms`, `/manage/examples`, `/manage/models`, `/manage/providers`, `/manage/signup-domains`, `/manage/whitelist`: create, read, edit, archive, and restore records; search and stale-edit protection included. Deletion is recoverable and historical references remain intact.
+- `/manage/images`: upload a new JPG/PNG/WebP (4 MB max), view images, edit their descriptions, and archive/restore metadata. Published media and stored files remain intact when an image is archived.
+- `/media`: view and manage real AI captions with their associated images.
+- `/requests`: paginated requests, scene/ID search, status filters, exact prompt snapshots, and live success/failure counts.
+- `/responses`: paginated model attempts with captions, HTTP results, latency, and provider token counts when available; navigate to the corresponding request.
+
+Apply the two additional migrations `20261029040129_admin_observability.sql` and `20261029040618_link_generation_traces.sql` after the Assignment 6 migration. They were created with Supabase CLI. These are additive changes to the original Humor Lab database, not the separate semester teaching copy.
+
+The updated caption app reads the weighted prompt chains, active terms, style examples, and first three enabled Google models. It records every actual model attempt, including safe failures and token counts, before returning a preview. Publishing links the caption to its request. Existing published outputs were backfilled as **Published history**, without inventing latency, token counts, or previous HTTP status. New telemetry is tagged **Live request**.
+
+Only Google is integrated into the current caption engine. Other provider entries are inventory metadata; no API keys belong in these tables. Signup-domain and email registries are managed lists, not enforced login gates and not admin permission grants. Google sign-in remains open, and the separately managed database flag still decides admin access.
+
+Run `supabase/tests/observability_access.sql` in SQL Editor as the owner. It tests catalog CRUD, archive/restore, stale edits, prompt mix, member/anonymous isolation, own-request logging, and publication links inside a rolled-back transaction. The existing `admin_access.sql` regression tests continue to pass. `scripts/check-access.mjs` includes every new admin route. No server-role key is needed.
 
 ## Features
 

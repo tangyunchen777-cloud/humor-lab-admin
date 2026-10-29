@@ -2,13 +2,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "./icons";
-const links = [["/","Overview","overview"],["/media","Media library","media"],["/profiles","Profiles","users"],["/ratings","Ratings","ratings"],["/activity","Activity log","activity"]];
+const links = [["/","Overview","overview"],["/media","AI media","media"],["/profiles","Profiles","users"],["/ratings","Ratings","ratings"],["/pipeline","Prompt chains & mix","activity"],["/requests","Generation requests","activity"],["/responses","LLM responses","activity"],["/manage/images","Images","media"],["/manage/terms","Terms","media"],["/manage/examples","AI examples","media"],["/manage/models","LLM models","activity"],["/manage/providers","LLM providers","activity"],["/manage/signup-domains","Signup domains","users"],["/manage/whitelist","Email whitelist","users"],["/activity","Activity log","activity"]];
 export function Sidebar() {
   const path = usePathname();
   return <aside className="flex shrink-0 flex-col bg-[#152e29] text-[#c7d2c5] md:fixed md:inset-y-0 md:w-60">
     <Link href="/" className="flex items-center gap-3 px-7 pb-7 pt-9"><span className="flex h-9 w-9 rotate-[-8deg] items-center justify-center rounded-xl bg-[#d9e8be] text-xl font-black text-[#17392e]">h.</span><span className="text-sm font-bold tracking-[.14em] text-white">HUMOR LAB<span className="mt-1 block text-[9px] font-medium tracking-[.23em] text-[#92a793]">CONTROL ROOM</span></span></Link>
     <p className="mb-3 hidden px-8 text-[9px] font-semibold tracking-[.22em] text-[#769183] md:block">WORKSPACE</p>
-    <nav aria-label="Admin navigation" className="flex gap-1 overflow-x-auto px-3 pb-5 md:block md:space-y-2 md:px-4">{links.map(([href,label,icon])=>{
+    <nav aria-label="Admin navigation" className="flex gap-1 overflow-x-auto px-3 pb-5 md:min-h-0 md:flex-1 md:block md:space-y-1 md:overflow-y-auto md:px-4">{links.map(([href,label,icon])=>{
       const active = href==="/" ? path==="/" : path.startsWith(href);
       return <Link key={href} href={href} aria-current={active?"page":undefined} className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-xs transition ${active?"bg-[#2e483b] font-semibold text-[#e1efbe]":"hover:bg-[#203c32] hover:text-white"}`}><Icon name={icon}/>{label}{active && <span className="ml-auto hidden h-1.5 w-1.5 rounded-full bg-[#d9e8be] md:block"/>}</Link>;
     })}</nav>
