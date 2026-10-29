@@ -5,7 +5,7 @@ import { PromptChainCard, type PromptChain, type PromptStep, type PromptMix } fr
 export default async function PipelinePage() {
   const { supabase } = await requireAdmin();
   const [chains, steps, mix] = await Promise.all([
-    supabase.from("prompt_chains").select("id,name,style,description,updated_at").order("style").order("created_at"),
+    supabase.from("prompt_chains").select("id,name,style,description,updated_at").order("style").order("id"),
     supabase.from("prompt_chain_steps").select("id,chain_id,position,name,instruction").order("position"),
     supabase.from("prompt_chain_mix").select("id,chain_id,weight,updated_at"),
   ]);
