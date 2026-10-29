@@ -5,14 +5,16 @@ Assignments 6–7: a separate Next.js admin app for the existing Humor Lab Supab
 ## Week 7
 
 - `/profiles`: existing profile directory, protected by Google login and the current superadmin flag.
-- `/pipeline`: read 6 prompt chains and 12 ordered steps; read/update their relative selection weights within each humor style. A style always retains a positive-weight chain. Steps compile into one model call.
+- `/pipeline`: edit each chain's name, description, step names, instructions, and step order; read/update relative selection weights within each humor style. Saves are atomic, audited, and protected against stale edits. A style always retains a positive-weight chain. Steps compile into one model call; saved changes affect new requests only.
 - `/manage/terms`, `/manage/examples`, `/manage/models`, `/manage/providers`, `/manage/signup-domains`, `/manage/whitelist`: create, read, edit, archive, and restore records; search and stale-edit protection included. Deletion is recoverable and historical references remain intact.
 - `/manage/images`: upload a new JPG/PNG/WebP (4 MB max), view images, edit their descriptions, and archive/restore metadata. Published media and stored files remain intact when an image is archived.
 - `/media`: view and manage real AI captions with their associated images.
 - `/requests`: paginated requests, scene/ID search, status filters, exact prompt snapshots, and live success/failure counts.
 - `/responses`: paginated model attempts with captions, HTTP results, latency, and provider token counts when available; navigate to the corresponding request.
 
-Apply the two additional migrations `20261029040129_admin_observability.sql` and `20261029040618_link_generation_traces.sql` after the Assignment 6 migration. They were created with Supabase CLI. These are additive changes to the original Humor Lab database, not the separate semester teaching copy.
+After the Assignment 6 migration, apply the subsequent files in `supabase/migrations/` in timestamp order: observability, generation trace links, voting visibility checks, and editable prompt chains. They were created with Supabase CLI. These are additive changes to the original Humor Lab database, not the separate semester teaching copy.
+
+The chain editor uses `20261029192910_editable_prompt_chains.sql`. Its atomic save RPC checks the current Google superadmin role, validates every existing step, preserves step IDs, rejects stale versions, and records an audit event. Chain styles remain fixed; edit their names, descriptions, instructions, and order. Ordinary members retain read-only/no-write table grants. Run `supabase/tests/prompt_chain_editing.sql` as the database owner to verify saves, reordering, validation, runtime prompt compilation, historical snapshot preservation, and access denial. The transaction rolls back all test edits. `supabase/tests/vote_visibility.sql` covers active and archived-caption voting permissions.
 
 The updated caption app reads the weighted prompt chains, active terms, style examples, and first three enabled Google models. It records every actual model attempt, including safe failures and token counts, before returning a preview. Publishing links the caption to its request. Existing published outputs were backfilled as **Published history**, without inventing latency, token counts, or previous HTTP status. New telemetry is tagged **Live request**.
 
