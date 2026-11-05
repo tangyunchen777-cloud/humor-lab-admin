@@ -2,16 +2,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "./icons";
-const links = [["/","Overview","overview"],["/media","AI media","media"],["/profiles","Profiles","users"],["/ratings","Ratings","ratings"],["/pipeline","Prompt chains & mix","activity"],["/requests","Generation requests","activity"],["/responses","LLM responses","activity"],["/manage/images","Images","media"],["/manage/terms","Terms","media"],["/manage/examples","AI examples","media"],["/manage/models","LLM models","activity"],["/manage/providers","LLM providers","activity"],["/manage/signup-domains","Signup domains","users"],["/manage/whitelist","Email whitelist","users"],["/activity","Activity log","activity"]];
-export function Sidebar() {
-  const path = usePathname();
-  return <aside className="flex shrink-0 flex-col bg-[#152e29] text-[#c7d2c5] md:fixed md:inset-y-0 md:w-60">
-    <Link href="/" className="flex items-center gap-3 px-7 pb-7 pt-9"><span className="flex h-9 w-9 rotate-[-8deg] items-center justify-center rounded-xl bg-[#d9e8be] text-xl font-black text-[#17392e]">h.</span><span className="text-sm font-bold tracking-[.14em] text-white">HUMOR LAB<span className="mt-1 block text-[9px] font-medium tracking-[.23em] text-[#92a793]">CONTROL ROOM</span></span></Link>
-    <p className="mb-3 hidden px-8 text-[9px] font-semibold tracking-[.22em] text-[#769183] md:block">WORKSPACE</p>
-    <nav aria-label="Admin navigation" className="flex gap-1 overflow-x-auto px-3 pb-5 md:min-h-0 md:flex-1 md:block md:space-y-1 md:overflow-y-auto md:px-4">{links.map(([href,label,icon])=>{
-      const active = href==="/" ? path==="/" : path.startsWith(href);
-      return <Link key={href} href={href} aria-current={active?"page":undefined} className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-xs transition ${active?"bg-[#2e483b] font-semibold text-[#e1efbe]":"hover:bg-[#203c32] hover:text-white"}`}><Icon name={icon}/>{label}{active && <span className="ml-auto hidden h-1.5 w-1.5 rounded-full bg-[#d9e8be] md:block"/>}</Link>;
-    })}</nav>
-    <div className="mt-auto hidden p-5 md:block"><div className="rounded-xl border border-[#385042] p-4"><span className="flex items-center gap-2 text-[10px] font-medium text-[#cbdcbd]"><span className="h-1.5 w-1.5 rounded-full bg-[#b1d590]"/>CONNECTED TO HUMOR LAB</span><p className="mt-3 text-xs leading-5 text-[#8fa792]">One community.<br/>A thousand possible punchlines.</p><a href="https://design-for-gen-ai-project.vercel.app/" target="_blank" rel="noreferrer" className="mt-4 flex items-center justify-between border-t border-[#385042] pt-3 text-[10px] text-[#d9e8be]">Open rating app <Icon name="arrow" className="h-3 w-3"/></a></div></div>
-  </aside>;
+const links=[
+ ["/","Overview","overview"],["/media","AI media","media"],["/profiles","Profiles","users"],["/ratings","Ratings","ratings"],
+ ["/pipeline","Prompt chains & mix","chain"],["/requests","Generation requests","requests"],["/responses","LLM responses","responses"],
+ ["/manage/images","Images","image"],["/manage/terms","Terms","terms"],["/manage/examples","AI examples","examples"],
+ ["/manage/models","LLM models","models"],["/manage/providers","LLM providers","providers"],["/manage/signup-domains","Signup domains","domains"],
+ ["/manage/whitelist","Email whitelist","mail"],["/activity","Activity log","activity"]
+];
+export function Sidebar(){
+ const path=usePathname();
+ return <aside className="admin-rail"><Link href="/" className="rail-brand" aria-label="Humor Lab overview" title="Humor Lab">h.</Link>
+ <nav className="rail-nav" aria-label="Admin navigation">{links.map(([href,label,icon])=>{
+  const active=href==="/"?path==="/":path.startsWith(href);
+  return <Link key={href} href={href} aria-label={label} aria-current={active?"page":undefined} title={label} className={`rail-link ${active?"is-active":""}`}><Icon name={icon} className="h-[19px] w-[19px]"/><span className="rail-tooltip" aria-hidden="true">{label}</span></Link>;
+ })}</nav><a href="https://design-for-gen-ai-project.vercel.app/" target="_blank" rel="noreferrer" className="rail-link rail-external" aria-label="Open rating app" title="Open rating app"><Icon name="external" className="h-[19px] w-[19px]"/><span className="rail-tooltip" aria-hidden="true">Open rating app</span></a></aside>;
 }
