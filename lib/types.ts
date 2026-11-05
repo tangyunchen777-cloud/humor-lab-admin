@@ -11,6 +11,7 @@ export type Profile = {
 export type Vote = {
   id: number; generation_id: string; user_id: string; value: number; created_at: string;
   updated_at: string; caption: string; voter_name: string; deleted_at: string | null;
+  image_url?: string; scene?: string;
 };
 export type Activity = { id: string; actor_name: string; action: string; media_id: string; summary: string; created_at: string };
 export type Snapshot = {
