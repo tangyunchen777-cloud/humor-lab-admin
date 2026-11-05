@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin";
+import { requireAdmin,getMediaContexts } from "@/lib/admin";
 import { catalogs,type CatalogRow } from "@/lib/catalog";
 import { PageTitle } from "@/components/common";
 import { CatalogManager } from "@/components/catalog-manager";
@@ -13,5 +13,9 @@ export default async function CatalogPage({params}:{params:Promise<{resource:str
  if(error||providerError)throw new Error("This collection could not load. Please try again.");
  const rows=(data||[]) as CatalogRow[];
  if(resource==="images")rows.forEach(row=>{row.image_url=supabase.storage.from("generation-images").getPublicUrl(String(row.storage_path)).data.publicUrl;});
+ if(resource==="examples"){
+  const contexts=await getMediaContexts(rows.map(row=>typeof row.source_generation_id==="string"?row.source_generation_id:null));
+  rows.forEach(row=>{row.image_url=contexts[String(row.source_generation_id)]?.image_url;});
+ }
  return <><PageTitle eyebrow="Configuration & content" title={config.title} description={config.description}/><CatalogManager resource={resource} rows={rows} providers={providers||[]} total={count||0}/></>;
 }
