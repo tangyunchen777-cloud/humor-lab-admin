@@ -4,6 +4,10 @@ Assignments 6–7: a separate Next.js admin app for the existing Humor Lab Supab
 
 ## Week 7
 
+Professor feedback update: the left navigation is an icon rail with accessible labels and hover/focus tooltips. The overview fits desktop viewports of at least 1024×640 without page scrolling, with full lists available through the dedicated pages. Small screens use a natural stacked layout. Media, ratings, favorites, examples, and model responses display their own source-photo thumbnails; click a thumbnail to open the full image. Written scenes and unpublished/unavailable image sources are labelled explicitly rather than given unrelated pictures.
+
+Apply `20261105114400_admin_feedback_context.sql` before deploying this update. New requests retain the selected variation name at creation; older requests show the current chain name beside the saved prompt, while pre-pipeline history is marked as not recorded. The protected `admin_media_context` RPC resolves exact media IDs, including archived captions in rating history. Run `supabase/tests/admin_feedback_context.sql` to verify source associations, snapshot preservation, and authorization.
+
 - `/profiles`: existing profile directory, protected by Google login and the current superadmin flag.
 - `/pipeline`: edit each chain's name, description, step names, instructions, and step order; read/update relative selection weights within each humor style. Saves are atomic, audited, and protected against stale edits. A style always retains a positive-weight chain. Steps compile into one model call; saved changes affect new requests only.
 - `/manage/terms`, `/manage/examples`, `/manage/models`, `/manage/providers`, `/manage/signup-domains`, `/manage/whitelist`: create, read, edit, archive, and restore records; search and stale-edit protection included. Deletion is recoverable and historical references remain intact.
